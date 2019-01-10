@@ -1,110 +1,120 @@
 """
-    Created on wed Nov  14 23:00:00 2018
+    
     @authors:-saad el harchi
-            -aziagba romuald
-            
-    this module is made to simulate a calculater.
-    to use it you need to call to methods of the modul:
-        -math_p.scan()
-        -math_p.calcul()
-    then after the execution you can write in the console the expression to
-    be calculated(+,-,*,/,^,r).
-    no spaces are allowed .
+             -aziagba romuald
+    
+    this module consists of many functions that represent predefined 
+    mathematical functions :-cos
+                            -sin
+                            -tan
+                            -cotan
+                            -exp
+                            -ln
 """
-class math_p:
-    expression=""
-    def plus(a,b):
-        """ a+b """
-        print("=",a+b)
-        return a+b
-    def moins(a,b):
-        """ a-b """
-        print("=",a-b)
-        return a-b
-    def multi(a,b):
-        """ a*b """
-        print("=",a*b)
-        return a*b
-    def divi(a,b):
-        """ a/b """
-        print("=",a/b)
-        return a/b
-    def puiss(a,b):
-        """ a**b """
-        print("=",a**b)
-        return a**b
-    def racine(a,b):
-        """ a**(1/b) """
-        print("=",a**(1/b))
-        return a**(1/b)
-    def absolute(a):
-        """ |a| """
-        if a<0:
-            print(-a)
-            return -a
-        else:
-            print(a)
-            return a
-        
-    def scan():
-        """gets the mathematical expression given by the user"""
-        global expression
-        expression = input()
-    def calcul():
-        """calculates and prints the value of the expression"""
-        e=1
-        a=0
-        b=0
-        
-        if  expression[0] == '-' :
-            while expression[e] == "0" or expression[e] == "1" or expression[e] == "2" or expression[e] == "3" or expression[e] == "4" or expression[e] == "5" or expression[e] == "6" or expression[e] == "7" or expression[e] == "8" or expression[e] == "9" :
-                a=a*10+-int(expression[e])
-                e+=1
-            while e+1<len(expression) and expression[e+1]!="\0":
-                b=b*10+int(expression[e+1])
-                e+=1
+import math
 
-            for i in range(2,len(expression)):
-                
-                if expression[i] == '+':
-                    math_p.plus(a,b)
-                elif expression[i] == '-':
-                    math_p.moins(a,b)
-                elif expression[i] == '/':
-                    math_p.divi(a,b)
-                elif expression[i] == 'r':
-                    math_p.racine(a,b)
-                elif expression[i] == '*':
-                    math_p.multi(a,b)
-                elif expression[i] == '^':
-                    math_p.puiss(a,b)
-                
+class math_p:
+    
+    expression=""
+    epsilone=0.000001
+    inf=100
+    e=2.71828182846
+   
+    def exp(self,x):
+        """
+        takes exactly one argument and returns e^x using the limited 
+        development of e.
+        """
+        if x == 1:
+            return math_p.e
+        elif x == 0:
+            return 1
         else:
-            e=0
-            b=0
-            while expression[e] == "0" or expression[e] == "1" or expression[e] == "2" or expression[e] == "3" or expression[e] == "4" or expression[e] == "5" or expression[e] == "6" or expression[e] == "7" or expression[e] == "8" or expression[e] == "9" :
-                a=a*10+int(expression[e])
-                e+=1
-            while  e+1 < len(expression) and expression[e+1]!="\0":
-                b=b*10+int(expression[e+1])
-                e+=1
-            for i in range(1,len(expression)):
-                
-                if expression[i] == '+':
-                    math_p.plus(a,b)
-                elif expression[i] == '-':
-                    math_p.moins(a,b)
-                elif expression[i] == '/':
-                    math_p.divi(a,b)
-                elif expression[i] == 'r':
-                    math_p.racine(a,b)
-                elif expression[i] == '*':
-                    math_p.multi(a,b)
-                elif expression[i] == '^':
-                    math_p.puiss(a,b)
-                
-      
-            
+            dev=0.0
+            fact=1.0
+            dev+=1+x
+            for i in range(2,math_p.inf):
+                fact*=i
+                dev+=(x**i)/fact
+            return dev
+    
+    def cos(self,x):
+        """
+        takes one argument and returns the cosin value of x.
+        """
+        
+        if x <360 :
+            dev=0.0
+            fact=1.0
+            dev+=1
+            for i in range(2,math_p.inf,2):
+                fact*=i*(i-1)
+                dev+=((-1)**(i//2+1))*((x**(i))/fact)
+            return dev
+        else:
+            while x >= 360:
+                x-=360
+            dev=0.0
+            fact=1.0
+            dev+=1
+            for i in range(2,math_p.inf,2):
+                fact*=i*(i-1)
+                dev+=((-1)**(i//2+1))*((x**(i))/fact)
+            return dev
+    def sin(self,x):
+        """
+        takes one argument and returns the sin value of x.
+        """
+        if x <360 :
+            dev=0.0
+            fact=1.0
+            dev+=x
+            for i in range(1,math_p.inf,2):
+                fact*=i*(i-1)
+                dev+=((-1)**((i//2)+1))*((x**(i)/fact))
+            return dev
+        else:
+            while x >= 360:
+                x-=360
+            dev=0.0
+            fact=1.0
+            dev+=x
+            for i in range(1,math_p.inf,2):
+                fact*=i*(i-1)
+                dev+=((-1)**((i//2)+1))*((x**(i)/fact))
+            return dev
+    def tan(self,x):
+        """
+        takes one argument and returns the tangent value of x usig both 
+        projet.cos and projet.sin .
+        """
+        return math_p.sin(self,x)/math_p.cos(self,x)
+    def cotan(self,x):
+        """
+        takes one argument and returns the tangent value of x usig both 
+        projet.tan .
+        """
+        return 1/math_p.tan(self,x)
+    def ln(self,x):
+        """
+        takes exactly one argument and returns ln(x) using the limited 
+        development of ln(1+(x-1)).
+        """
+        t = (x-1)/(x+1)
+        tc = t*t
+        s1 = t
+        n = 0
+        while True:
+            n += 1
+            t *= tc*(2*n-1)/(2*n+1)
+            s2 = s1 + t
+            if s2 == s1:
+                break
+            s1 = s2
+        return 2*s2  
+    
+        
+        
             
             
             
